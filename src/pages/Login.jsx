@@ -21,7 +21,12 @@ const Login = () => {
     if (isAuthenticated) navigate("/dashboard");
   }, [isAuthenticated, navigate]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <div style={{ transform: "translateY(50vh)" }}>
+        <Loading />
+      </div>
+    );
   return (
     <>
       <div className="login">

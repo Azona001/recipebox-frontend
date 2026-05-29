@@ -10,7 +10,7 @@ export default function Loading() {
         alignItems: "center",
       }}
     >
-      <CircularProgress size="30px" aria-label="Loading…" />
+      <CircularProgress size="25px" aria-label="Loading…" />
     </Box>
   );
 }
