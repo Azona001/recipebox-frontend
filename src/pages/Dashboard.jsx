@@ -10,6 +10,9 @@ import { useCategory } from "../context/CategoryProvider";
 import { useRecipe } from "../context/RecipeProvider";
 import RecipeDetail from "./RecipeDetail";
 import Loading from "../components/Loading";
+import { useTheme } from "../context/ThemeProvider";
+import { WiDaySunny } from "react-icons/wi";
+import { WiMoonWaningCrescent3 } from "react-icons/wi";
 
 const Dashboard = () => {
   const { user, logout: auth0Logout } = useAuth0();
@@ -33,6 +36,7 @@ const Dashboard = () => {
     handleUpdate,
     handleCategoryChange,
   } = useRecipe();
+  const { theme, toggleTheme } = useTheme();
 
   const logout = () =>
     auth0Logout({ logoutParams: { returnTo: window.location.origin } });
@@ -70,7 +74,11 @@ const Dashboard = () => {
   }, [fetchRecipes]);
 
   const userPlanStyling =
-    userPlan === "pro" ? { color: "#6a510a" } : { color: "#111827" };
+    userPlan === "pro" && theme === "light"
+      ? { color: "#6a510a" }
+      : theme === "dark"
+        ? { color: "#FFD700" }
+        : { color: "#111827" };
 
   return (
     <>
@@ -100,6 +108,18 @@ const Dashboard = () => {
               </button>
             </li>
           </ul>
+
+          <button
+            onClick={toggleTheme}
+            type="button"
+            className={`btn-theme ${theme === "dark" ? "dark" : ""}`}
+          >
+            {theme === "dark" ? (
+              <WiMoonWaningCrescent3 style={{ color: "yellow" }} />
+            ) : (
+              <WiDaySunny />
+            )}
+          </button>
         </nav>
       </header>
       <main className="main">
