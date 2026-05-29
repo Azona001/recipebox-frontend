@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 const UpgradeToPro = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +39,7 @@ const UpgradeToPro = () => {
           disabled={isLoading}
           className="btn btn-upgrade"
         >
-          {isLoading ? "Loading..." : "Upgrade Now"}
+          {isLoading ? <Loading /> : "Upgrade Now"}
         </button>
         {error && <p className="message-error">{error}</p>}
       </div>

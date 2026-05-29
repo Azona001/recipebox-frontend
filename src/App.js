@@ -6,12 +6,13 @@ import Success from "./pages/Success";
 import Cancel from "./pages/Cancel";
 import "./App.css";
 import "react-quill-new/dist/quill.snow.css";
+import Loading from "./components/Loading.jsx";
 
 // Protected route wrapper
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth0();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loading />;
 
   return isAuthenticated ? children : <Navigate to="/login" />;
 };

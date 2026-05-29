@@ -9,6 +9,7 @@ import RecipeCategories from "./RecipeCategories";
 import { useCategory } from "../context/CategoryProvider";
 import { useRecipe } from "../context/RecipeProvider";
 import RecipeDetail from "./RecipeDetail";
+import Loading from "../components/Loading";
 
 const Dashboard = () => {
   const { user, logout: auth0Logout } = useAuth0();
@@ -104,7 +105,10 @@ const Dashboard = () => {
       <main className="main">
         <section>
           {isLoading ? (
-            <p> Loading... </p>
+            <p>
+              {" "}
+              <Loading />{" "}
+            </p>
           ) : error ? (
             <p className="message-error">{error}</p>
           ) : recipes.length === 0 ? (

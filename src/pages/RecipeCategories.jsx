@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 const RecipeCategories = ({ recipe, allCategories, onCategoryChange }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -81,7 +82,7 @@ const RecipeCategories = ({ recipe, allCategories, onCategoryChange }) => {
       {showDropdown && (
         <div className="category-dropdown">
           {isLoading ? (
-            <p>Loading...</p>
+            <Loading />
           ) : (
             availableCategories.map((cat) => (
               <button

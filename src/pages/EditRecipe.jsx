@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import React from "react";
 import useEditor from "../hooks/Editor";
+import Loading from "../components/Loading";
 
 const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -185,7 +186,7 @@ const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
           <div className="submit">
             {isLoading ? (
               <button type="submit" className="btn" disabled aria-disabled>
-                Loading...
+                <Loading />
               </button>
             ) : (
               <>

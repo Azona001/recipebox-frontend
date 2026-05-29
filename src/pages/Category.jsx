@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import React from "react";
 import AddCategory from "./AddCategory";
 import { useCategory } from "../context/CategoryProvider";
+import Loading from "../components/Loading";
 
 const Category = () => {
   const {
@@ -24,7 +25,9 @@ const Category = () => {
         <h2>Categories</h2>
         <div className="category-list">
           {isLoading ? (
-            <p>Loading...</p>
+            <p>
+              <Loading />
+            </p>
           ) : error ? (
             <p>{error}</p>
           ) : categories.length === 0 ? (

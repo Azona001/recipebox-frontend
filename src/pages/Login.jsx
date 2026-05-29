@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Loading from "../components/Loading";
 
 const Login = () => {
   const {
@@ -20,7 +21,7 @@ const Login = () => {
     if (isAuthenticated) navigate("/dashboard");
   }, [isAuthenticated, navigate]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loading />;
   return (
     <>
       <div className="login">

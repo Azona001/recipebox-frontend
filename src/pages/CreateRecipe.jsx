@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import React from "react";
 import useEditor from "../hooks/Editor";
+import Loading from "../components/Loading";
 
 const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -193,7 +194,7 @@ const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
           <div className="submit">
             {isLoading ? (
               <button type="submit" className="btn" disabled aria-disabled>
-                Loading...
+                <Loading />
               </button>
             ) : (
               <>

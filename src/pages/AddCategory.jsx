@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
+import Loading from "../components/Loading";
 
 const AddCategory = ({ onCreated }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +60,7 @@ const AddCategory = ({ onCreated }) => {
         <div className="submit">
           {isLoading ? (
             <button type="submit" className="btn" disabled aria-disabled>
-              Loading...
+              <Loading />
             </button>
           ) : (
             <button type="submit" className="btn btn-primary">
