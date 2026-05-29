@@ -3,7 +3,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import React from "react";
 import useEditor from "../hooks/Editor";
-import "dotenv/config";
 
 const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
   const [isLoading, setIsLoading] = useState(false);

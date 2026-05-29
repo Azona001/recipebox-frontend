@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
-import "dotenv/config";
 
 const AddCategory = ({ onCreated }) => {
   const [isLoading, setIsLoading] = useState(false);

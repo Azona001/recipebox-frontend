@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from "axios";
 import React from "react";
 import useEditor from "../hooks/Editor";
-import "dotenv/config";
 
 const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
   const [isLoading, setIsLoading] = useState(false);
