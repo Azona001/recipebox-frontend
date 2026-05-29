@@ -1,0 +1,204 @@
+import React from "react";
+import { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import CreateRecipe from "./CreateRecipe";
+import EditRecipe from "./EditRecipe";
+import Category from "./Category";
+import UpgradeToPro from "./UpgradeToPro";
+import RecipeCategories from "./RecipeCategories";
+import { useCategory } from "../context/CategoryProvider";
+import { useRecipe } from "../context/RecipeProvider";
+import RecipeDetail from "./RecipeDetail";
+
+const Dashboard = () => {
+  const { user, logout: auth0Logout } = useAuth0();
+
+  const [visible, setVisible] = useState(false);
+  const [editingRecipe, setEditingRecipe] = useState(null);
+  const [message, setMessage] = useState("");
+  const [viewingRecipe, setViewingRecipe] = useState(null);
+
+  const { categories } = useCategory();
+  const {
+    recipes,
+    isLoading,
+    error,
+    deleteError,
+    userPlan,
+    recentlyUpdated,
+    fetchRecipes,
+    handleRecipeCreated,
+    handleDelete,
+    handleUpdate,
+    handleCategoryChange,
+  } = useRecipe();
+
+  const logout = () =>
+    auth0Logout({ logoutParams: { returnTo: window.location.origin } });
+
+  const handleVisible = () => {
+    setVisible(true);
+  };
+
+  const handleHide = (visible) => {
+    if (visible) setVisible(false);
+  };
+
+  const handleEdit = (recipe) => {
+    setEditingRecipe(recipe);
+  };
+
+  const handleCloseEdit = () => {
+    setEditingRecipe(null);
+  };
+
+  const handleMessage = (message) => {
+    setMessage(message);
+  };
+
+  const handleViewRecipe = (recipe) => {
+    setViewingRecipe(recipe);
+  };
+
+  const handleCloseView = () => {
+    setViewingRecipe(null);
+  };
+
+  useEffect(() => {
+    fetchRecipes();
+  }, [fetchRecipes]);
+
+  const userPlanStyling =
+    userPlan === "pro" ? { color: "#6a510a" } : { color: "#111827" };
+
+  return (
+    <>
+      <header className="header">
+        <div className="header-title">
+          <h1>RecipeBox</h1>
+          <p>Personal Recipe Collection</p>
+        </div>
+        <div className="right">
+          Welcome, <span className="user">{user.name} </span>
+          <span> </span>
+          <p style={userPlanStyling}>
+            {userPlan[0].toUpperCase() + userPlan.slice(1)}
+          </p>
+        </div>
+        <nav className="nav">
+          <ul className="nav-items">
+            <li>
+              <button className="btn btn-primary" onClick={handleVisible}>
+                New Recipe +
+              </button>
+            </li>
+            <li>
+              {" "}
+              <button type="button" className="btn btn-small" onClick={logout}>
+                Logout
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main className="main">
+        <section>
+          {isLoading ? (
+            <p> Loading... </p>
+          ) : error ? (
+            <p className="message-error">{error}</p>
+          ) : recipes.length === 0 ? (
+            <p>No recipes added yet: {recipes}</p>
+          ) : (
+            <>
+              {deleteError && <p className="message-error">{deleteError}</p>}
+
+              <ul className="grid">
+                {recipes.map((recipe) => (
+                  <li className="card" key={recipe.recipeId}>
+                    <div
+                      onClick={() => handleViewRecipe(recipe)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {recipe.imageUrl && (
+                        <img
+                          src={recipe.imageUrl}
+                          alt={recipe.title}
+                          className="recipe-image"
+                        />
+                      )}
+                      <h3 className="title">{recipe.title}</h3>
+                      <div className="duration-serving">
+                        <span>
+                          {recipe.duration}{" "}
+                          {recipe.duration > 1 ? "mins" : "min"}
+                        </span>
+                        <span> • </span>
+                        <span>
+                          {recipe.servings}{" "}
+                          {recipe.servings > 1 ? "servings" : "serving"}
+                        </span>
+                      </div>
+                      <p>{recipe.description}</p>
+                    </div>
+
+                    {categories.length > 0 && (
+                      <RecipeCategories
+                        recipe={recipe}
+                        allCategories={categories}
+                        onCategoryChange={handleCategoryChange}
+                      />
+                    )}
+
+                    <div className="card-btn">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleEdit(recipe)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(recipe.recipeId)}
+                      >
+                        &times;
+                      </button>
+
+                      {message && recentlyUpdated === recipe.recipeId && (
+                        <p className="message-success">{message}</p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+        {visible && (
+          <CreateRecipe
+            onRecipeCreated={handleRecipeCreated}
+            onHide={handleHide}
+            visible={visible}
+          />
+        )}
+        {editingRecipe && (
+          <EditRecipe
+            recipe={editingRecipe}
+            onRecipeUpdated={handleUpdate}
+            onClose={handleCloseEdit}
+            onMessage={handleMessage}
+          />
+        )}
+
+        {viewingRecipe && (
+          <RecipeDetail recipe={viewingRecipe} onClose={handleCloseView} />
+        )}
+
+        <Category />
+        {userPlan === "free" && <UpgradeToPro />}
+      </main>
+    </>
+  );
+};
+
+export default Dashboard;
