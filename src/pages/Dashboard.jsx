@@ -141,8 +141,8 @@ const Dashboard = () => {
                 {recipes.map((recipe) => (
                   <li className="card" key={recipe.recipeId}>
                     <div
+                      className="card-details"
                       onClick={() => handleViewRecipe(recipe)}
-                      style={{ cursor: "pointer" }}
                     >
                       {recipe.imageUrl && (
                         <img
