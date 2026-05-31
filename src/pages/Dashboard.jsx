@@ -15,7 +15,12 @@ import { WiDaySunny } from "react-icons/wi";
 import { WiMoonWaningCrescent3 } from "react-icons/wi";
 
 const Dashboard = () => {
-  const { user, logout: auth0Logout, isAuthenticated } = useAuth0();
+  const {
+    user,
+    logout: auth0Logout,
+    isAuthenticated,
+    isLoading: authLoading,
+  } = useAuth0();
 
   const [visible, setVisible] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -70,8 +75,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) fetchRecipes();
-  }, [fetchRecipes, isAuthenticated]);
+    if (isAuthenticated && user) fetchRecipes();
+  }, [fetchRecipes, isAuthenticated, user]);
 
   const userPlanStyling =
     userPlan === "pro" && theme === "light"
@@ -80,6 +85,7 @@ const Dashboard = () => {
         ? { color: "#FFD700" }
         : { color: "#111827" };
 
+  if (authLoading || !isAuthenticated || !user) return <Loading />;
   return (
     <>
       <header className="header">
@@ -91,7 +97,7 @@ const Dashboard = () => {
           Welcome, <span className="user">{user.name} </span>
           <span> </span>
           <p style={userPlanStyling}>
-            {userPlan[0].toUpperCase() + userPlan.slice(1)}
+            {userPlan ? userPlan[0].toUpperCase() + userPlan.slice(1) : "Free"}
           </p>
         </div>
         <nav className="nav">
