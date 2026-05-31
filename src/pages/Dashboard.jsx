@@ -131,7 +131,7 @@ const Dashboard = () => {
             </p>
           ) : error ? (
             <p className="message-error">{error}</p>
-          ) : recipes.length === 0 ? (
+          ) : (recipes ?? []).length === 0 ? (
             <p>No recipes added yet: {recipes}</p>
           ) : (
             <>
