@@ -19,6 +19,7 @@ root.render(
         audience: "https://recipebox-api.com/",
         scope: "openid profile email",
       }}
+      cacheLocation="localstorage"
     >
       <CategoryProvider>
         <RecipeProvider>
