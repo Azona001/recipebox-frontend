@@ -3,6 +3,7 @@ import React from "react";
 import AddCategory from "./AddCategory";
 import { useCategory } from "../context/CategoryProvider";
 import Loading from "../components/Loading";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Category = () => {
   const {
@@ -15,9 +16,11 @@ const Category = () => {
     fetchCategories,
   } = useCategory();
 
+  const { isAuthenticated } = useAuth0();
+
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    if (isAuthenticated) fetchCategories();
+  }, [fetchCategories, isAuthenticated]);
 
   return (
     <>

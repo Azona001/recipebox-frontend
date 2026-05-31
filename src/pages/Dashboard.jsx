@@ -15,7 +15,7 @@ import { WiDaySunny } from "react-icons/wi";
 import { WiMoonWaningCrescent3 } from "react-icons/wi";
 
 const Dashboard = () => {
-  const { user, logout: auth0Logout } = useAuth0();
+  const { user, logout: auth0Logout, isAuthenticated } = useAuth0();
 
   const [visible, setVisible] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -70,8 +70,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchRecipes();
-  }, [fetchRecipes]);
+    if (isAuthenticated) fetchRecipes();
+  }, [fetchRecipes, isAuthenticated]);
 
   const userPlanStyling =
     userPlan === "pro" && theme === "light"

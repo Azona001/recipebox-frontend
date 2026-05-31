@@ -12,9 +12,11 @@ export const RecipeProvider = ({ children }) => {
   const [deleteError, setDeleteError] = useState(null);
   const [userPlan, setUserPlan] = useState("free");
   const [recentlyUpdated, setRecentlyUpdated] = useState(null);
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const fetchRecipes = useCallback(async () => {
+    if (!isAuthenticated) return;
+
     setIsLoading(true);
     setError(null);
     setRecipes([]);
@@ -35,7 +37,7 @@ export const RecipeProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, isAuthenticated]);
 
   const handleRecipeCreated = (newRecipe) => {
     setRecipes((prev) => [newRecipe, ...prev]);

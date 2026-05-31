@@ -10,7 +10,7 @@ const CategoryProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [deleteError, setDeleteError] = useState(null);
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const handleDelete = async (id) => {
     setDeleteError(null);
@@ -36,6 +36,7 @@ const CategoryProvider = ({ children }) => {
   };
 
   const fetchCategories = useCallback(async () => {
+    if (!isAuthenticated) return;
     setIsLoading(true);
     setError(null);
     setCategories([]);
@@ -56,7 +57,7 @@ const CategoryProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, isAuthenticated]);
 
   const value = {
     categories,
