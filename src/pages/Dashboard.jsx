@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import CreateRecipe from "./CreateRecipe";
 import EditRecipe from "./EditRecipe";
@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [message, setMessage] = useState("");
   const [viewingRecipe, setViewingRecipe] = useState(null);
+  const sentinelRef = useRef(null);
 
   const { categories } = useCategory();
   const {
@@ -35,7 +36,10 @@ const Dashboard = () => {
     deleteError,
     userPlan,
     recentlyUpdated,
+    hasMore,
+    isFetchingMore,
     fetchRecipes,
+    loadMore,
     handleRecipeCreated,
     handleDelete,
     handleUpdate,
@@ -77,6 +81,20 @@ const Dashboard = () => {
   useEffect(() => {
     if (isAuthenticated && user) fetchRecipes();
   }, [fetchRecipes, isAuthenticated, user]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetchingMore) {
+          loadMore();
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    if (sentinelRef.current) observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, isFetchingMore, loadMore]);
 
   const userPlanStyling =
     userPlan === "pro" && theme === "light"
@@ -131,14 +149,11 @@ const Dashboard = () => {
       <main className="main">
         <section>
           {isLoading ? (
-            <p>
-              {" "}
-              <Loading />{" "}
-            </p>
+            <Loading />
           ) : error ? (
             <p className="message-error">{error}</p>
-          ) : (recipes ?? []).length === 0 ? (
-            <p>No recipes added yet: {recipes}</p>
+          ) : (recipes ?? []).length === 0 && !isLoading ? (
+            <p>No recipes added yet!</p>
           ) : (
             <>
               {deleteError && <p className="message-error">{deleteError}</p>}
@@ -201,6 +216,14 @@ const Dashboard = () => {
                   </li>
                 ))}
               </ul>
+
+              {/* sentinel */}
+              <div ref={sentinelRef} style={{ height: "1px" }} />
+
+              {isFetchingMore && <Loading />}
+              {!hasMore && recipes.length > 0 && (
+                <p style={{ textAlign: "center" }}>No more recipes</p>
+              )}
             </>
           )}
         </section>
