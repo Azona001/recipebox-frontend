@@ -4,10 +4,11 @@ import axios from "axios";
 import React from "react";
 import useEditor from "../hooks/Editor";
 import Loading from "../components/Loading";
+import toast from "react-hot-toast";
 
-const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
+const EditRecipe = ({ recipe, onRecipeUpdated, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     title: recipe.title,
@@ -32,8 +33,6 @@ const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
-    onMessage("");
 
     try {
       const token = await getAccessTokenSilently();
@@ -61,12 +60,11 @@ const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
       const data = response.data;
       const updatedRecipe = data.updatedRecipe;
       onRecipeUpdated(recipe.recipeId, updatedRecipe);
-      onMessage(response.data.msg);
-      setTimeout(() => onMessage(""), 3000);
+      toast.success(response.data.msg);
       onClose();
     } catch (error) {
       if (error.response) console.log(error.response.data);
-      setError(error.message);
+      toast.error(error.response?.data?.msg || error.message);
     } finally {
       setIsLoading(false);
     }
@@ -196,8 +194,6 @@ const EditRecipe = ({ recipe, onRecipeUpdated, onClose, onMessage }) => {
               </>
             )}
           </div>
-
-          {error && <p className="message-error">{error}</p>}
         </form>
       </div>
     </>

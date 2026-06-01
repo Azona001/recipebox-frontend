@@ -24,26 +24,28 @@ const Dashboard = () => {
 
   const [visible, setVisible] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
-  const [message, setMessage] = useState("");
+
   const [viewingRecipe, setViewingRecipe] = useState(null);
   const sentinelRef = useRef(null);
 
   const { categories } = useCategory();
+
   const {
     recipes,
     isLoading,
     error,
     deleteError,
     userPlan,
-    recentlyUpdated,
     hasMore,
     isFetchingMore,
+    search,
     fetchRecipes,
     loadMore,
     handleRecipeCreated,
     handleDelete,
     handleUpdate,
     handleCategoryChange,
+    handleSearch,
   } = useRecipe();
   const { theme, toggleTheme } = useTheme();
 
@@ -64,10 +66,6 @@ const Dashboard = () => {
 
   const handleCloseEdit = () => {
     setEditingRecipe(null);
-  };
-
-  const handleMessage = (message) => {
-    setMessage(message);
   };
 
   const handleViewRecipe = (recipe) => {
@@ -148,6 +146,18 @@ const Dashboard = () => {
       </header>
       <main className="main">
         <section>
+          <div
+            className="search"
+            style={{ marginBottom: "1.5rem", paddingInline: "1.5rem" }}
+          >
+            <input
+              type="text"
+              placeholder="Search recipes..."
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
+
           {isLoading ? (
             <Loading />
           ) : error ? (
@@ -208,10 +218,6 @@ const Dashboard = () => {
                       >
                         &times;
                       </button>
-
-                      {message && recentlyUpdated === recipe.recipeId && (
-                        <p className="message-success">{message}</p>
-                      )}
                     </div>
                   </li>
                 ))}
@@ -239,7 +245,6 @@ const Dashboard = () => {
             recipe={editingRecipe}
             onRecipeUpdated={handleUpdate}
             onClose={handleCloseEdit}
-            onMessage={handleMessage}
           />
         )}
 

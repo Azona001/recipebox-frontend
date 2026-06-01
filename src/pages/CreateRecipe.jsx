@@ -4,10 +4,11 @@ import axios from "axios";
 import React from "react";
 import useEditor from "../hooks/Editor";
 import Loading from "../components/Loading";
+import toast from "react-hot-toast";
 
 const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -17,7 +18,7 @@ const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
     ingredients: "",
     instructions: "",
   });
-  const [message, setMessage] = useState("");
+
   const [editor, value, reset] = useEditor("instructions");
 
   const { getAccessTokenSilently } = useAuth0();
@@ -33,8 +34,7 @@ const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
-    setMessage("");
+
     //let's try and fetch here
 
     try {
@@ -74,13 +74,11 @@ const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
       });
       reset();
       setImage(null);
-      setMessage(`Success: ${response.data.msg}`);
-      setTimeout(() => setMessage(""), 4000);
+      toast.success(response.data.msg);
       onHide(visible);
     } catch (error) {
       if (error.response) console.log(error.response.data);
-      setError(`${error.response.data.msg}\n Error: ${error.message}`);
-      setTimeout(() => setError(null), 4000);
+      toast.error(error.response?.data?.msg || error.message);
     } finally {
       setIsLoading(false);
     }
@@ -201,12 +199,9 @@ const CreateRecipe = ({ onRecipeCreated, onHide, visible }) => {
                 <button type="submit" className="btn btn-primary">
                   Submit
                 </button>
-
-                <p className="message-success">{message}</p>
               </>
             )}
           </div>
-          {error && <p className="message-error">{error}</p>}
         </form>
       </div>
     </>

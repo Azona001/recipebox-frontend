@@ -3,11 +3,11 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import Loading from "../components/Loading";
+import toast from "react-hot-toast";
 
 const AddCategory = ({ onCreated }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+
   const [formData, setFormData] = useState({
     category: "",
   });
@@ -20,7 +20,7 @@ const AddCategory = ({ onCreated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
+
     try {
       const token = await getAccessTokenSilently();
       const response = await axios.post(
@@ -31,11 +31,10 @@ const AddCategory = ({ onCreated }) => {
       const createdCategory = response.data.createdCategory;
       onCreated(createdCategory);
       setFormData({ category: "" });
-      setSuccess(response.data.msg);
-      setTimeout(() => setSuccess(null), 4000);
+      toast.success(response.data.msg);
     } catch (error) {
       if (error.response) console.log(error.response.data);
-      setError(error.message);
+      toast.error(error.response?.data?.msg || error.message);
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +66,6 @@ const AddCategory = ({ onCreated }) => {
               Create
             </button>
           )}
-          {error && <p className="message-error">{error}</p>}
-          {success && <p className="message-success">{success}</p>}
         </div>
       </form>
     </>
