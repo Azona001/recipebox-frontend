@@ -13,6 +13,11 @@ import Loading from "../components/Loading";
 import { useTheme } from "../context/ThemeProvider";
 import { WiDaySunny } from "react-icons/wi";
 import { WiMoonWaningCrescent3 } from "react-icons/wi";
+import RecipeSkeleton from "../components/RecipeSkeleton";
+import Favorite from "../components/Favorite";
+import { IoHeartSharp } from "react-icons/io5";
+import { FaRegClock } from "react-icons/fa";
+import { MdOutlineSoupKitchen } from "react-icons/md";
 
 const Dashboard = () => {
   const {
@@ -39,6 +44,7 @@ const Dashboard = () => {
     hasMore,
     isFetchingMore,
     search,
+    favoritesOnly,
     fetchRecipes,
     loadMore,
     handleRecipeCreated,
@@ -46,6 +52,7 @@ const Dashboard = () => {
     handleUpdate,
     handleCategoryChange,
     handleSearch,
+    toggleFavFilter,
   } = useRecipe();
   const { theme, toggleTheme } = useTheme();
 
@@ -146,22 +153,31 @@ const Dashboard = () => {
       </header>
       <main className="main">
         <section>
-          <div
-            className="search"
-            style={{ marginBottom: "1.5rem", paddingInline: "1.5rem" }}
-          >
-            <input
-              type="text"
-              placeholder="Search recipes..."
-              value={search}
-              onChange={(e) => handleSearch(e.target.value)}
-            />
+          <div className="menu">
+            <div className="search">
+              <input
+                type="text"
+                placeholder="Search recipes..."
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </div>
+            <button
+              className={`btn ${favoritesOnly ? "btn-primary" : "btn-small"}`}
+              onClick={toggleFavFilter}
+            >
+              <IoHeartSharp /> {favoritesOnly ? "All Recipes" : "Favourites"}
+            </button>
           </div>
 
           {isLoading ? (
-            <Loading />
+            <ul className="grid">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <RecipeSkeleton key={i} />
+              ))}
+            </ul>
           ) : error ? (
-            <p className="message-error">{error}</p>
+            <span className="message-error">{error}</span>
           ) : (recipes ?? []).length === 0 && !isLoading ? (
             <p>No recipes added yet!</p>
           ) : (
@@ -171,6 +187,7 @@ const Dashboard = () => {
               <ul className="grid">
                 {recipes.map((recipe) => (
                   <li className="card" key={recipe.recipeId}>
+                    <Favorite recipe={recipe} />
                     <div
                       className="card-details"
                       onClick={() => handleViewRecipe(recipe)}
@@ -185,12 +202,12 @@ const Dashboard = () => {
                       <h3 className="title">{recipe.title}</h3>
                       <div className="duration-serving">
                         <span>
-                          {recipe.duration}{" "}
+                          <FaRegClock /> {recipe.duration}{" "}
                           {recipe.duration > 1 ? "mins" : "min"}
                         </span>
                         <span> • </span>
                         <span>
-                          {recipe.servings}{" "}
+                          <MdOutlineSoupKitchen /> {recipe.servings}{" "}
                           {recipe.servings > 1 ? "servings" : "serving"}
                         </span>
                       </div>
@@ -226,9 +243,17 @@ const Dashboard = () => {
               {/* sentinel */}
               <div ref={sentinelRef} style={{ height: "1px" }} />
 
-              {isFetchingMore && <Loading />}
+              {isFetchingMore && (
+                <ul className="grid">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <RecipeSkeleton key={i} />
+                  ))}
+                </ul>
+              )}
               {!hasMore && recipes.length > 0 && (
-                <p style={{ textAlign: "center" }}>No more recipes</p>
+                <p style={{ textAlign: "center", marginTop: "1.5rem" }}>
+                  No more recipes
+                </p>
               )}
             </>
           )}

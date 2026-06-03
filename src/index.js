@@ -7,6 +7,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import CategoryProvider from "./context/CategoryProvider";
 import { RecipeProvider } from "./context/RecipeProvider";
 import ThemeProvider from "./context/ThemeProvider";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -36,3 +37,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+serviceWorkerRegistration.register();

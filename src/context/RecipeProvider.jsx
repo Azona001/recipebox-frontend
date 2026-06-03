@@ -26,11 +26,16 @@ export const RecipeProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const debounceSearch = useDebounce(search);
   const isFirstRender = useRef(true);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
 
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const fetchRecipes = useCallback(
-    async (pageNum = 1, searchQuery = debounceSearch) => {
+    async (
+      pageNum = 1,
+      searchQuery = debounceSearch,
+      favOnly = favoritesOnly,
+    ) => {
       if (!isAuthenticated) return;
 
       if (pageNum === 1) {
@@ -43,7 +48,7 @@ export const RecipeProvider = ({ children }) => {
       const token = await getAccessTokenSilently();
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/recipes?page=${pageNum}&limit=3&search=${searchQuery}`,
+          `${process.env.REACT_APP_API_URL}/api/recipes?page=${pageNum}&limit=3&search=${searchQuery}&favorites=${favOnly}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -64,7 +69,7 @@ export const RecipeProvider = ({ children }) => {
         setIsFetchingMore(false);
       }
     },
-    [getAccessTokenSilently, isAuthenticated, debounceSearch],
+    [getAccessTokenSilently, isAuthenticated, debounceSearch, favoritesOnly],
   );
 
   const loadMore = useCallback(() => {
@@ -106,6 +111,12 @@ export const RecipeProvider = ({ children }) => {
     setSearch(query);
   };
 
+  const toggleFavFilter = useCallback(() => {
+    const newValue = !favoritesOnly;
+    setFavoritesOnly(newValue);
+    fetchRecipes(1, debounceSearch, newValue);
+  }, [favoritesOnly, fetchRecipes, debounceSearch]);
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -128,6 +139,7 @@ export const RecipeProvider = ({ children }) => {
     hasMore,
     isFetchingMore,
     search,
+    favoritesOnly,
     fetchRecipes,
     loadMore,
     handleRecipeCreated,
@@ -135,6 +147,7 @@ export const RecipeProvider = ({ children }) => {
     handleUpdate,
     handleCategoryChange,
     handleSearch,
+    toggleFavFilter,
   };
 
   return (

@@ -7,6 +7,7 @@ import Cancel from "./pages/Cancel";
 import "./App.css";
 import "react-quill-new/dist/quill.snow.css";
 import Loading from "./components/Loading.jsx";
+import SharedRecipe from "./pages/SharedRecipe.jsx";
 import { Toaster } from "react-hot-toast";
 
 // Protected route wrapper
@@ -35,6 +36,7 @@ const App = () => {
           />
           <Route path="/success" element={<Success />} />
           <Route path="/cancel" element={<Cancel />} />
+          <Route path="/recipe/:shareId" element={<SharedRecipe />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>

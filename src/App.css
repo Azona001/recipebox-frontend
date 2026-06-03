@@ -745,8 +745,21 @@
     overflow-x: hidden;
   }
 
-  .recipe-detail > button + img {
+  .modal .recipe-detail * {
+    margin: 0;
+  }
+
+  .modal .recipe-detail > * + * {
     margin-top: 1.5rem;
+  }
+
+  .recipe-detail > .buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .buttons > .position-print {
+    margin-left: auto;
   }
 
   .recipe-detail-image {
@@ -754,16 +767,15 @@
     height: 400px;
     object-fit: cover;
     border-radius: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .recipe-detail-header {
-    margin-bottom: 1.5rem;
   }
 
   .recipe-detail-header h2 {
     font-size: 2rem;
-    margin-bottom: 0.5rem;
+  }
+
+  .recipe-detail .recipe-detail-header > * + *,
+  .recipe-detail .recipe-section > * + * {
+    margin-top: 1.5rem;
   }
 
   .recipe-meta {
@@ -779,13 +791,9 @@
     gap: 0.3rem;
   }
 
-  .recipe-section {
-    margin-top: 2rem;
-  }
-
   .recipe-section h3 {
     font-size: 1.3rem;
-    margin-bottom: 0.8rem;
+
     color: var(--text-color);
     border-bottom: 2px solid var(--border);
     padding-bottom: 0.5rem;
@@ -825,7 +833,7 @@
     color: var(--text-color);
   }
 
-  .recipe-date {
+  .recipe-meta .recipe-date {
     margin-left: auto;
   }
 
@@ -881,5 +889,79 @@
     .btn-theme {
       margin-left: auto;
     }
+  }
+
+  .share-link {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+    text-decoration: underline;
+  }
+
+  .share-link:hover {
+    opacity: 0.8;
+  }
+
+  .menu {
+    margin-bottom: 1.5rem;
+    padding-inline: 1.5rem;
+  }
+
+  .menu > * + * {
+    margin-top: 1.5rem;
+  }
+}
+
+@media print {
+  /* Hide the main app layout */
+  .header,
+  .menu,
+  .grid,
+  .section-category,
+  footer {
+    display: none;
+  }
+
+  @page {
+    size: auto; /* Targets standard A4 paper */
+    margin: 2cm; /* Sets 2cm margins on all edges */
+  }
+
+  h1,
+  h2,
+  h3,
+  img {
+    page-break-inside: avoid; /* Keeps element intact on one page */
+  }
+
+  /* Hide the modal overlay background */
+  .modal {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+
+  /* Make recipe detail fill the page cleanly */
+  .recipe-detail {
+    position: static !important;
+    top: unset !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .recipe-detail-image {
+    display: none !important;
+  }
+
+  /* Hide buttons */
+  .buttons {
+    display: none;
   }
 }

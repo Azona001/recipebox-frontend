@@ -32,7 +32,7 @@ const Category = () => {
               <Loading />
             </p>
           ) : error ? (
-            <p>{error}</p>
+            <span>{error}</span>
           ) : (categories ?? []).length === 0 ? (
             <p>No added categories...</p>
           ) : (
