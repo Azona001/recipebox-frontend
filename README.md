@@ -1,70 +1,101 @@
-# Getting Started with Create React App
+# RecipeBox — Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full stack personal recipe management app where users can save, organize, and share their favorite recipes. This is the React client, deployed on **Vercel**.
 
-## Available Scripts
+**Live demo:** https://recipebox-frontend-eta.vercel.app/
+**Backend repo/folder:** https://github.com/Azona001/recipebox-backend
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- 🔐 **Auth0 authentication** — secure login/signup with session handling and route guards
+- ♾️ **Infinite scroll** — `IntersectionObserver` with a sentinel element, separate `isLoading` / `isFetchingMore` states
+- 🔍 **Debounced search** — custom `useDebounce` hook (built from scratch, no lodash) driving backend search
+- ❤️ **Favorites** — toggleable favorites with a custom SVG gradient heart icon and dashboard filter
+- 🔗 **Recipe sharing** — generate public share links viewable without an account
+- 🖨️ **Print to PDF** — print-optimized recipe view using `window.print()` and `@media print` CSS
+- 💀 **Skeleton loading** — MUI Skeleton cards matched to real card layout to avoid layout shift
+- 🔔 **Toast notifications** — success/error feedback via `react-hot-toast`
+- 🌗 **Dark/light theme** support
+- 📱 **PWA support** — installable, with service worker and web manifest
+- 💳 **Pro plan upgrade** — Stripe-powered upgrade flow (`UpgradeToPro`)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Category      | Tech                                     |
+| ------------- | ---------------------------------------- |
+| Framework     | React                                    |
+| UI            | Material UI (MUI), custom CSS            |
+| Auth          | Auth0 React SDK                          |
+| Notifications | react-hot-toast                          |
+| Payments      | Stripe                                   |
+| Images        | Cloudinary (uploads handled via backend) |
+| Deployment    | Vercel                                   |
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- Node.js 18+
+- The [RecipeBox backend](../backend) running locally or deployed
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# Clone the repo and move into the frontend folder
+cd frontend
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Install dependencies
+npm install
+```
 
-### `npm run eject`
+### Environment Variables
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Create a `.env` file in the frontend root:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```env
+REACT_APP_API_URL=http://localhost:5000
+REACT_APP_AUTH0_DOMAIN=your-tenant.us.auth0.com
+REACT_APP_AUTH0_CLIENT_ID=your_auth0_client_id
+REACT_APP_AUTH0_AUDIENCE=your_api_audience
+REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+> Adjust variable names/prefixes to match your setup (e.g. `VITE_` if using Vite).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Running Locally
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The app runs at `http://localhost:3000` by default.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project Structure
 
-### Code Splitting
+```
+frontend/
+├── public/              # Static assets, manifest.json, service worker
+├── src/
+│   ├── components/      # Reusable UI (RecipeCard, UpgradeToPro, etc.)
+|   ├── context/         # React context providers (RecipeProvider, CategoryProvider, ThemeProvider)
+│   ├── pages/           # Route-level pages (Dashboard, SharedRecipe, etc.)
+│   ├── hooks/           # Custom hooks (useDebounce)
+│   ├── App.js
+│   └── index.js
+└── package.json
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Notable Implementation Details
 
-### Analyzing the Bundle Size
+- **`useDebounce` hook** — uses `useRef` to skip the first render, preventing a double fetch on mount.
+- **Infinite scroll** — a sentinel `div` observed by `IntersectionObserver`; the backend returns a `hasMore` flag to stop fetching.
+- **Print styles** — `@media print` rules hide app chrome and reset transforms so recipes print cleanly.
+- **Skeletons** — reuse the existing `card` CSS class for layout so skeletons stay in sync with real cards automatically.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Deployment
 
-### Making a Progressive Web App
+Deployed on Vercel. Push to `main` triggers a production deploy. Remember to set all environment variables in the Vercel dashboard.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## License
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT — [Your Name]
