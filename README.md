@@ -54,10 +54,6 @@ Create a `.env` file in the frontend root:
 
 ```env
 REACT_APP_API_URL=http://localhost:5000
-REACT_APP_AUTH0_DOMAIN=your-tenant.us.auth0.com
-REACT_APP_AUTH0_CLIENT_ID=your_auth0_client_id
-REACT_APP_AUTH0_AUDIENCE=your_api_audience
-REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
 ```
 
 > Adjust variable names/prefixes to match your setup (e.g. `VITE_` if using Vite).
@@ -98,4 +94,4 @@ Deployed on Vercel. Push to `main` triggers a production deploy. Remember to set
 
 ## License
 
-MIT — [Your Name]
+MIT — Azona Isagba
